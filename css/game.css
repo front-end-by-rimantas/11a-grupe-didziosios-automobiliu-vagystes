@@ -17,8 +17,14 @@
 .dav .map {
     display: inline-block;
     position: absolute;
-    top: 0;
-    left: 0;
+    width: 300%;
+    height: 300%;
+    top: -100%;
+    left: -100%;
+
+    /* veliau istrinti */
+    background-image: url(../img/map-demo.png);
+    background-size: cover;
 }
 
 .dav .car {
@@ -36,14 +42,11 @@
 
 .dav .person {
     display: inline-block;
-    width: 52px;
-    height: 36px;
+    width: 26px;
+    height: 18px;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(180deg);
 }
-    .dav .person.person-black-blue {
-        background-image: url(../img/characters/character_black_blue.png);
-    }
 
