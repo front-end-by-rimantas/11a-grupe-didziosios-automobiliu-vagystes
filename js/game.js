@@ -1,8 +1,11 @@
 import PlayerPerson from './playerPerson.js';
+import mapData from './data/map.js';
 
 class DavGame {
     constructor ( data ) {
+        this.time = 0;
         this.GAME;
+        this.MAP;
         this.DOM = document.querySelector(data.target);
         this.player;
         this.playerCar;
@@ -16,6 +19,7 @@ class DavGame {
     }
 
     init() {
+        this.time = Date.now();
         this.DOM.innerHTML = `
             <div class="zoom">
                 <div class="map">
@@ -23,6 +27,8 @@ class DavGame {
                 </div>
             </div>`;
         this.DOM.classList.add('dav');
+
+        this.updateMapWithSidewalks();
 
         this.player = new PlayerPerson( this.DOM, 'black', 'blue' );
 
@@ -33,8 +39,12 @@ class DavGame {
     }
 
     gameStep() {
+        const now = Date.now();
+        const dt = (now - this.time) / 1000;
+        this.time = now;
+        
         // pajudiname zaidejo masina ar zmogeliuka (juda zemelapis)
-        this.player.move();
+        this.player.move( dt );
         // priklausomai nuo posukiu, pasukame masina
         // tikriname, ar:
             // - masina neatsitrenke i pastata
@@ -52,7 +62,13 @@ class DavGame {
         })
     }
 
+    updateMapWithSidewalks() {
+        this.MAP = mapData;
+    }
+
     renderMap() {
+        console.log(this.MAP);
+        
         return 'ZEMELAPIS + REIKIAMOS SEKCIJOS';
     }
 }

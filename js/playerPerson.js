@@ -2,12 +2,16 @@ class PlayerPerson {
     constructor ( DOM, hair, clothes ) {
         this.DOM;
         this.DOMmap;
-        this.width = 52;                        // px
-        this.height = 36;                       // px
+        this.width = 52;                            // px
+        this.height = 36;                           // px
         this.life = Infinity;
-        this.x = 1500;                             // px
-        this.y = 600;                             // px
-        this.direction = 0;                     // deg
+        this.x = 1500;                              // px - pozicijos koordinates
+        this.y = 600;                               // px - pozicijos koordinates
+        this.speed = 0;                             // 0px/s - pradinis ejimo greitis
+        this.maxSpeed = 200;                         // 50px/s - maksimalus greitis
+        this.accelaration = 100;                    // 100px/s - pagreitis
+        this.direction = 0;                         // deg - pasisukimo kampas
+        this.rotationSpeed = 180;                   // deg/s - sukimosi kampinis greitis
         this.hairColor = hair || this.randomHairColor();
         this.clothesColor = clothes || this.randomClothesColor();
         this.keyboard = {
@@ -38,7 +42,6 @@ class PlayerPerson {
         this.DOM = DOM.querySelector('#person');
 
         // zmogeliuko pozicija reletyviai sugeneruotam zemelapiui
-
         this.DOMmap = DOM.querySelector('.map');
         const DOMstyle = getComputedStyle(this.DOMmap);
         this.x = -parseFloat(DOMstyle.width) / 2;
@@ -99,9 +102,30 @@ class PlayerPerson {
         return;
     }
 
-    move = () => {
-        this.x += 1;
-        this.y += 1;
+    move = ( dt ) => {        
+        if ( this.keyboard.up ) {
+            this.speed += this.accelaration * dt;
+        }
+        if ( this.keyboard.down ) {
+            this.speed -= this.accelaration * dt;
+        }
+        if ( this.keyboard.left ) {
+            this.direction -= this.rotationSpeed * dt;
+        }
+        if ( this.keyboard.right ) {
+            this.direction += this.rotationSpeed * dt;
+        }
+
+        // kad nevirsyti max greicio
+        if ( this.speed > this.maxSpeed ) this.speed = this.maxSpeed;
+        if ( this.speed < 0 ) this.speed = 0;
+
+        // trigonometrija judejimo pozicijai skaiciuoti
+        const radians = (this.direction - 90) * Math.PI / 180;
+        this.x += this.speed * Math.cos( radians ) * dt;
+        this.y += this.speed * Math.sin( radians ) * dt;
+
+        this.DOM.style.transform = `rotate(${this.direction}deg)`;
         this.DOMmap.style.left = this.x + 'px';
         this.DOMmap.style.top = this.y + 'px';
     }
