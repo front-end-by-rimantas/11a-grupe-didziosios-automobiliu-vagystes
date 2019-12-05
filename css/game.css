@@ -10,7 +10,7 @@
     display: inline-block;
     width: 100%;
     height: 100%;
-    zoom: 0.5;
+    /* zoom: 0.5; */
     position: relative;
     overflow: hidden;
 }
@@ -21,10 +21,7 @@
     height: 300%;
     top: -100%;
     left: -100%;
-
-    /* veliau istrinti */
-    background-image: url(../img/map-demo.png);
-    background-size: cover;
+    position: relative;
 }
 
 .dav .car {

@@ -7,6 +7,7 @@ class DavGame {
         this.GAME;
         this.MAP;
         this.DOM = document.querySelector(data.target);
+        this.DOMmap;
         this.player;
         this.playerCar;
         this.selected = 'person';      // 'person' || 'car'
@@ -20,15 +21,20 @@ class DavGame {
 
     init() {
         this.time = Date.now();
+        this.updateMapWithSidewalks();
+
         this.DOM.innerHTML = `
             <div class="zoom">
-                <div class="map">
-                    ${this.renderMap()}
-                </div>
+                <div class="map" style="
+                    width: ${3 * 20 * 128}px;
+                    height: ${3 * 20 * 128}px;
+                    top: ${-20 * 128}px;
+                    left: ${-20 * 128}px;"></div>
             </div>`;
         this.DOM.classList.add('dav');
+        this.DOMmap = this.DOM.querySelector('.map');
 
-        this.updateMapWithSidewalks();
+        this.renderMap();
 
         this.player = new PlayerPerson( this.DOM, 'black', 'blue' );
 
@@ -64,12 +70,67 @@ class DavGame {
 
     updateMapWithSidewalks() {
         this.MAP = mapData;
+        for ( let sy=0; sy<this.MAP.length; sy++ ) {
+            const sectionsRow = this.MAP[sy];
+            for ( let sx=0; sx<sectionsRow.length; sx++ ) {
+                const section = sectionsRow[sx];
+                for ( let y=0; y<section.length; y++ ) {
+                    const row = section[y];
+                    for ( let x=0; x<row.length; x++ ) {
+                        const tile = row[x];
+                        // jei randame kelio tipa (value: 2), tai aplinkinius 0 -> 1
+                        if ( tile === 2 ) {
+                            for ( let dy=-1; dy<=1; dy++ ) {
+                                if ( y+dy >= 0 && y+dy < section.length ) {
+                                    for ( let dx=-1; dx<=1; dx++ ) {
+                                        if ( x+dx >= 0 && x+dx < row.length ) {
+                                            if ( section[y+dy][x+dx] !== 2 ) {
+                                                section[y+dy][x+dx] = 1;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     renderMap() {
-        console.log(this.MAP);
+        let HTML = '';
+        const pathToTile = './img/tiles/';
+        const roadTile = `asphalt-road/road_asphalt22.png"`;
+        const sidewalkTile = `grass/land_grass04.png"`;
+        const buildingTile = `sand/land_sand05.png"`;
+        const tiles = [buildingTile, sidewalkTile, roadTile];
+
+        const sectionSize = 20 * 128;
         
-        return 'ZEMELAPIS + REIKIAMOS SEKCIJOS';
+        for ( let sy=0; sy<this.MAP.length; sy++ ) {
+            const sectionsRow = this.MAP[sy];
+            for ( let sx=0; sx<sectionsRow.length; sx++ ) {
+                const section = sectionsRow[sx];
+                HTML += `<div class="sector"
+                                style="width: ${sectionSize}px;
+                                        height: ${sectionSize}px;
+                                        top: ${sy * sectionSize}px;
+                                        left: ${sx * sectionSize}px;">`;
+                for ( let y=0; y<section.length; y++ ) {
+                    const row = section[y];
+                    for ( let x=0; x<row.length; x++ ) {
+                        const tile = row[x];
+                        HTML += `<img src="${pathToTile}${tiles[tile]}.png"
+                                        style="top: ${y * 128}px;
+                                                left: ${x * 128}px;">`;
+                    }
+                }
+                HTML += '</div>';
+            }
+        }
+
+        return this.DOMmap.innerHTML = HTML;
     }
 }
 
