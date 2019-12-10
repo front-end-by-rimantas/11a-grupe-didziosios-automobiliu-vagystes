@@ -5,8 +5,8 @@ class PlayerPerson {
         this.width = 52;                            // px
         this.height = 36;                           // px
         this.life = Infinity;
-        this.x = 1500;                              // px - pozicijos koordinates
-        this.y = 600;                               // px - pozicijos koordinates
+        this.x = 0;                              // px - pozicijos koordinates
+        this.y = 0;                               // px - pozicijos koordinates
         this.speed = 0;                             // 0px/s - pradinis ejimo greitis
         this.maxSpeed = 200;                         // 50px/s - maksimalus greitis
         this.accelaration = 100;                    // 100px/s - pagreitis
@@ -44,8 +44,11 @@ class PlayerPerson {
         // zmogeliuko pozicija reletyviai sugeneruotam zemelapiui
         this.DOMmap = DOM.querySelector('.map');
         const DOMstyle = getComputedStyle(this.DOMmap);
-        this.x = -parseFloat(DOMstyle.width) / 2;
-        this.y = -parseFloat(DOMstyle.height) / 2;
+        this.x = -(parseFloat(DOMstyle.width) - window.innerWidth) / 2;
+        this.y = -(parseFloat(DOMstyle.height) - window.innerHeight) / 2;
+
+        console.log(DOMstyle.width, window.innerWidth);
+        
 
         window.addEventListener('keydown', (e) => {
             switch (e.keyCode) {
@@ -102,7 +105,10 @@ class PlayerPerson {
         return;
     }
 
-    move = ( dt ) => {        
+    nextPosition = ( dt ) => {
+        let nextX = 0;
+        let nextY = 0;
+
         if ( this.keyboard.up ) {
             this.speed += this.accelaration * dt;
         }
@@ -122,8 +128,19 @@ class PlayerPerson {
 
         // trigonometrija judejimo pozicijai skaiciuoti
         const radians = (this.direction - 90) * Math.PI / 180;
-        this.x += this.speed * Math.cos( radians ) * dt;
-        this.y += this.speed * Math.sin( radians ) * dt;
+        nextX += this.x + this.speed * Math.cos( radians ) * dt;
+        nextY += this.y + this.speed * Math.sin( radians ) * dt;
+
+        return { x: nextX, y: nextY };
+    }
+
+    move = ( dt ) => {
+        // const np = this.nextPosition( dt );
+        // const x = np.x;
+        // const y = np.y;
+        const { x, y } = this.nextPosition( dt );
+        this.x = x;
+        this.y = y;
 
         this.DOM.style.transform = `rotate(${this.direction}deg)`;
         this.DOMmap.style.left = this.x + 'px';

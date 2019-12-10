@@ -47,3 +47,11 @@
     transform: translate(-50%, -50%) rotate(180deg);
 }
 
+pre.popup {
+    position: fixed;
+    top: 40px;
+    left: 40px;
+    background-color: #555;
+    color: #5f5;
+    padding: 20px;
+}

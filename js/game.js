@@ -8,6 +8,7 @@ class DavGame {
         this.MAP;
         this.DOM = document.querySelector(data.target);
         this.DOMmap;
+        this.tileSize = 128;
         this.player;
         this.playerCar;
         this.selected = 'person';      // 'person' || 'car'
@@ -26,10 +27,11 @@ class DavGame {
         this.DOM.innerHTML = `
             <div class="zoom">
                 <div class="map" style="
-                    width: ${3 * 20 * 128}px;
-                    height: ${3 * 20 * 128}px;
-                    top: ${-20 * 128}px;
-                    left: ${-20 * 128}px;"></div>
+                    width: ${3 * 20 * this.tileSize}px;
+                    height: ${3 * 20 * this.tileSize}px;
+                    top: ${-20 * this.tileSize - window.innerHeight / 2}px;
+                    left: ${-20 * this.tileSize - window.innerWidth / 2}px;"></div>
+                <pre class="popup"></pre>
             </div>`;
         this.DOM.classList.add('dav');
         this.DOMmap = this.DOM.querySelector('.map');
@@ -50,7 +52,10 @@ class DavGame {
         this.time = now;
         
         // pajudiname zaidejo masina ar zmogeliuka (juda zemelapis)
-        this.player.move( dt );
+            // isitikiname, jog galima pajudeti norima kryptimi
+            if ( this.isAllowedPosition( this.player.nextPosition( dt ) ) ) {
+                this.player.move( dt );
+            }
         // priklausomai nuo posukiu, pasukame masina
         // tikriname, ar:
             // - masina neatsitrenke i pastata
@@ -66,6 +71,17 @@ class DavGame {
         window.requestAnimationFrame(() => {
             this.gameStep();
         })
+    }
+
+    isAllowedPosition ( position ) {
+        const x = position.x - window.innerWidth / 2;
+        const y = position.y - window.innerHeight / 2;
+
+        const p = {x, y}
+
+        document.querySelector('pre.popup').textContent = JSON.stringify(p, null, 4)
+        
+        return true;
     }
 
     updateMapWithSidewalks() {
@@ -106,7 +122,7 @@ class DavGame {
         const buildingTile = `sand/land_sand05.png"`;
         const tiles = [buildingTile, sidewalkTile, roadTile];
 
-        const sectionSize = 20 * 128;
+        const sectionSize = 20 * this.tileSize;
         
         for ( let sy=0; sy<this.MAP.length; sy++ ) {
             const sectionsRow = this.MAP[sy];
@@ -122,8 +138,8 @@ class DavGame {
                     for ( let x=0; x<row.length; x++ ) {
                         const tile = row[x];
                         HTML += `<img src="${pathToTile}${tiles[tile]}.png"
-                                        style="top: ${y * 128}px;
-                                                left: ${x * 128}px;">`;
+                                        style="top: ${y * this.tileSize}px;
+                                                left: ${x * this.tileSize}px;">`;
                     }
                 }
                 HTML += '</div>';
