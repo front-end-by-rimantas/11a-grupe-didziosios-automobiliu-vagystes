@@ -9,6 +9,7 @@ class DavGame {
         this.DOM = document.querySelector(data.target);
         this.DOMmap;
         this.tileSize = 128;
+        this.sectionTileCount = 10;
         this.player;
         this.playerCar;
         this.selected = 'person';      // 'person' || 'car'
@@ -27,10 +28,10 @@ class DavGame {
         this.DOM.innerHTML = `
             <div class="zoom">
                 <div class="map" style="
-                    width: ${3 * 20 * this.tileSize}px;
-                    height: ${3 * 20 * this.tileSize}px;
-                    top: ${-20 * this.tileSize - window.innerHeight / 2}px;
-                    left: ${-20 * this.tileSize - window.innerWidth / 2}px;"></div>
+                    width: ${3 * this.sectionTileCount * this.tileSize}px;
+                    height: ${3 * this.sectionTileCount * this.tileSize}px;
+                    top: ${-1.5 * this.sectionTileCount * this.tileSize}px;
+                    left: ${-1.5 * this.sectionTileCount * this.tileSize}px;"></div>
                 <pre class="popup"></pre>
             </div>`;
         this.DOM.classList.add('dav');
@@ -74,8 +75,8 @@ class DavGame {
     }
 
     isAllowedPosition ( position ) {
-        const x = position.x - window.innerWidth / 2;
-        const y = position.y - window.innerHeight / 2;
+        const x = position.x
+        const y = position.y;
 
         const p = {x, y}
 
@@ -122,7 +123,7 @@ class DavGame {
         const buildingTile = `sand/land_sand05.png"`;
         const tiles = [buildingTile, sidewalkTile, roadTile];
 
-        const sectionSize = 20 * this.tileSize;
+        const sectionSize = this.sectionTileCount * this.tileSize;
         
         for ( let sy=0; sy<this.MAP.length; sy++ ) {
             const sectionsRow = this.MAP[sy];

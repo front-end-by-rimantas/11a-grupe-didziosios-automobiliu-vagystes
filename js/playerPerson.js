@@ -8,7 +8,7 @@ class PlayerPerson {
         this.x = 0;                              // px - pozicijos koordinates
         this.y = 0;                               // px - pozicijos koordinates
         this.speed = 0;                             // 0px/s - pradinis ejimo greitis
-        this.maxSpeed = 200;                         // 50px/s - maksimalus greitis
+        this.maxSpeed = 1000;                         // 50px/s - maksimalus greitis
         this.accelaration = 100;                    // 100px/s - pagreitis
         this.direction = 0;                         // deg - pasisukimo kampas
         this.rotationSpeed = 180;                   // deg/s - sukimosi kampinis greitis
@@ -44,8 +44,9 @@ class PlayerPerson {
         // zmogeliuko pozicija reletyviai sugeneruotam zemelapiui
         this.DOMmap = DOM.querySelector('.map');
         const DOMstyle = getComputedStyle(this.DOMmap);
-        this.x = -(parseFloat(DOMstyle.width) - window.innerWidth) / 2;
-        this.y = -(parseFloat(DOMstyle.height) - window.innerHeight) / 2;
+        
+        this.x = -parseFloat(DOMstyle.width) / 2;
+        this.y = -parseFloat(DOMstyle.height) / 2;
 
         console.log(DOMstyle.width, window.innerWidth);
         
@@ -142,9 +143,9 @@ class PlayerPerson {
         this.x = x;
         this.y = y;
 
-        this.DOM.style.transform = `rotate(${this.direction}deg)`;
-        this.DOMmap.style.left = this.x + 'px';
-        this.DOMmap.style.top = this.y + 'px';
+        this.DOM.style.transform = `translate(-50%, -50%) rotate(${this.direction}deg)`;
+        this.DOMmap.style.left = this.x + (window.innerWidth / 2) + 'px';
+        this.DOMmap.style.top = this.y + (window.innerHeight / 2) + 'px';
     }
 }
 
