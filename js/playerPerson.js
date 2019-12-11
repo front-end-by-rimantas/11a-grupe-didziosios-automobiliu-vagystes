@@ -8,7 +8,7 @@ class PlayerPerson {
         this.x = 0;                              // px - pozicijos koordinates
         this.y = 0;                               // px - pozicijos koordinates
         this.speed = 0;                             // 0px/s - pradinis ejimo greitis
-        this.maxSpeed = 1000;                         // 50px/s - maksimalus greitis
+        this.maxSpeed = 300;                         // 50px/s - maksimalus greitis
         this.accelaration = 100;                    // 100px/s - pagreitis
         this.direction = 0;                         // deg - pasisukimo kampas
         this.rotationSpeed = 180;                   // deg/s - sukimosi kampinis greitis
@@ -135,6 +135,10 @@ class PlayerPerson {
         return { x: nextX, y: nextY };
     }
 
+    rotate = ( dt ) => {
+        this.DOM.style.transform = `translate(-50%, -50%) rotate(${this.direction}deg)`;
+    }
+
     move = ( dt ) => {
         // const np = this.nextPosition( dt );
         // const x = np.x;
@@ -143,7 +147,6 @@ class PlayerPerson {
         this.x = x;
         this.y = y;
 
-        this.DOM.style.transform = `translate(-50%, -50%) rotate(${this.direction}deg)`;
         this.DOMmap.style.left = this.x + (window.innerWidth / 2) + 'px';
         this.DOMmap.style.top = this.y + (window.innerHeight / 2) + 'px';
     }

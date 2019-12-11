@@ -9,7 +9,7 @@ class DavGame {
         this.DOM = document.querySelector(data.target);
         this.DOMmap;
         this.tileSize = 128;
-        this.sectionTileCount = 10;
+        this.sectionTileCount = 20;
         this.player;
         this.playerCar;
         this.selected = 'person';      // 'person' || 'car'
@@ -54,6 +54,7 @@ class DavGame {
         
         // pajudiname zaidejo masina ar zmogeliuka (juda zemelapis)
             // isitikiname, jog galima pajudeti norima kryptimi
+            this.player.rotate( dt );
             if ( this.isAllowedPosition( this.player.nextPosition( dt ) ) ) {
                 this.player.move( dt );
             }
@@ -77,12 +78,27 @@ class DavGame {
     isAllowedPosition ( position ) {
         const x = position.x
         const y = position.y;
-
-        const p = {x, y}
-
+        const xTile = Math.floor(-x / this.tileSize);
+        const yTile = Math.floor(-y / this.tileSize);
+        const xSection = Math.floor(xTile / this.sectionTileCount)
+        const ySection = Math.floor(yTile / this.sectionTileCount)
+        const p = {
+            x,
+            y,
+            xt: xTile - xSection * this.sectionTileCount,
+            yt: yTile - ySection * this.sectionTileCount,
+            xs: xSection,
+            ys: ySection
+        }
         document.querySelector('pre.popup').textContent = JSON.stringify(p, null, 4)
         
-        return true;
+
+        const tileType = this.MAP[ySection][xSection][yTile - ySection * this.sectionTileCount][xTile - xSection * this.sectionTileCount]; 
+        if ( tileType === 1 || tileType === 2 ) {
+            return true;
+        }
+
+        return false;
     }
 
     updateMapWithSidewalks() {
