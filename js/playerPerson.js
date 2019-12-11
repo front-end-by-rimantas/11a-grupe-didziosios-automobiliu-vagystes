@@ -3,12 +3,7 @@ import Person from './person.js';
 class PlayerPerson extends Person {
     constructor ( DOM, index, x, y, hair, clothes ) {
         super( DOM, index, x, y, hair, clothes );
-        this.keyboard = {
-            up: false,
-            right: false,
-            down: false,
-            left: false
-        }
+        this.directionCorrection = -90;
 
         this.initEventListeners();
     }

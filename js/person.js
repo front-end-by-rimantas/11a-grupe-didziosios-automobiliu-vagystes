@@ -12,9 +12,16 @@ class Person {
         this.maxSpeed = 300;                         // 50px/s - maksimalus greitis
         this.accelaration = 100;                    // 100px/s - pagreitis
         this.direction = 0;                         // deg - pasisukimo kampas
+        this.directionCorrection = 0;
         this.rotationSpeed = 180;                   // deg/s - sukimosi kampinis greitis
         this.hairColor = hair || this.randomHairColor();
         this.clothesColor = clothes || this.randomClothesColor();
+        this.keyboard = {
+            up: false,
+            right: false,
+            down: false,
+            left: false
+        }
 
         this.render( DOM );
     }
@@ -42,8 +49,8 @@ class Person {
             HTML = `<img id="person${this.index}"
                         class="person ${this.index === 1 ? 'player' : ''}"
                         src="./img/characters/character_${this.hairColor}_${this.clothesColor}.png"
-                        style="top: ${-this.y}px;
-                                left: ${-this.x}px;">`;
+                        style="top: ${this.y}px;
+                                left: ${this.x}px;">`;
             DOM.querySelector('.map').insertAdjacentHTML('beforeend', HTML);
         }
         this.DOM = DOM.querySelector('#person'+this.index);
@@ -75,7 +82,7 @@ class Person {
         if ( this.speed < 0 ) this.speed = 0;
 
         // trigonometrija judejimo pozicijai skaiciuoti
-        const radians = (this.direction - 90) * Math.PI / 180;
+        const radians = (this.direction + this.directionCorrection) * Math.PI / 180;
         nextX += this.x + this.speed * Math.cos( radians ) * dt;
         nextY += this.y + this.speed * Math.sin( radians ) * dt;
 
