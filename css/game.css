@@ -42,10 +42,13 @@
     width: 26px;
     height: 18px;
     position: absolute;
-    top: 50%;
-    left: 50%;
     transform: translate(-50%, -50%) rotate(180deg);
 }
+    .dav .person.player {
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) rotate(180deg);
+    }
 
 pre.popup {
     position: fixed;

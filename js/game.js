@@ -1,4 +1,5 @@
 import PlayerPerson from './playerPerson.js';
+import BotPerson from './botPerson.js';
 import mapData from './data/map.js';
 
 class DavGame {
@@ -9,7 +10,8 @@ class DavGame {
         this.DOM = document.querySelector(data.target);
         this.DOMmap;
         this.tileSize = 128;
-        this.sectionTileCount = 20;
+        this.sectionTileCount = 10;
+        this.botPersons = [];
         this.player;
         this.playerCar;
         this.selected = 'person';      // 'person' || 'car'
@@ -39,12 +41,27 @@ class DavGame {
 
         this.renderMap();
 
-        this.player = new PlayerPerson( this.DOM, 'black', 'blue' );
+        const DOMstyle = getComputedStyle(this.DOMmap);
+        const personX = -parseFloat(DOMstyle.width) / 2;
+        const personY = -parseFloat(DOMstyle.height) / 2;
+        this.player = new PlayerPerson( this.DOM, 1, personX, personY, 'black', 'blue' );
+        this.generateBotPersons(50);
 
         // uzkurti zaidimo varykli
         this.GAME = window.requestAnimationFrame(() => {
             this.gameStep();
         })
+    }
+
+    generateBotPersons ( count ) {
+        const DOMstyle = getComputedStyle(this.DOMmap);
+        
+        for ( let i=0; i<count; i++ ) {
+            const personX = -Math.random() * parseFloat(DOMstyle.width);
+            const personY = -Math.random() * parseFloat(DOMstyle.height);
+            this.botPersons.push( new BotPerson( this.DOM, this.botPersons.length + 2, personX, personY ) );
+        }
+        console.log(this.botPersons);
     }
 
     gameStep() {

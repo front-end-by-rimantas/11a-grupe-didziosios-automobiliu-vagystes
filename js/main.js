@@ -10,4 +10,3 @@ const data = {
 }
 
 const game = new DavGame( data );
-console.log(game);

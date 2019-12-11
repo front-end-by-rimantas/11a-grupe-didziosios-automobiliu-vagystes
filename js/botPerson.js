@@ -1,11 +1,11 @@
 import Person from './person.js';
 
 class BotPerson extends Person {
-    constructor(props) {
-        super(props);
+    constructor( DOM, index, hair, clothes ) {
+        super( DOM, index, hair, clothes );
         
     }
     
 }
 
-export default PlayerPerson;
+export default BotPerson;
