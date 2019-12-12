@@ -55,10 +55,20 @@ class DavGame {
 
     generateBotPersons ( count ) {
         const DOMstyle = getComputedStyle(this.DOMmap);
-        for ( let i=0; i<count; i++ ) {
+
+        while ( this.botPersons.length < count ) {
             const personX = Math.random() * parseFloat(DOMstyle.width);
             const personY = Math.random() * parseFloat(DOMstyle.height);
-            this.botPersons.push( new BotPerson( this.DOM, this.botPersons.length + 2, personX, personY ) );
+            let xTile = Math.floor(personX / this.tileSize);
+            let yTile = Math.floor(personY / this.tileSize);
+            const xSector = Math.floor(xTile / this.sectionTileCount);
+            const ySector = Math.floor(yTile / this.sectionTileCount);
+            xTile -= xSector * this.sectionTileCount;
+            yTile -= ySector * this.sectionTileCount;
+            // tikriname ar apskaiciuotose random coord yra saligatvis
+            if ( this.MAP[ySector][xSector][yTile][xTile] === 1 ) {
+                this.botPersons.push( new BotPerson( this.DOM, this.botPersons.length + 2, personX, personY ) );
+            }
         }
     }
 

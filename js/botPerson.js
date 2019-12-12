@@ -3,7 +3,8 @@ import Person from './person.js';
 class BotPerson extends Person {
     constructor( DOM, index, hair, clothes ) {
         super( DOM, index, hair, clothes );
-        this.speed = 20;
+        // this.speed = 20;
+        this.speed = 0;
         this.direction = Math.random() * 360;
         this.directionCorrection = 90;
         // timeChangeDirection
@@ -25,8 +26,8 @@ class BotPerson extends Person {
         this.tcd.last += dt;
         if ( this.tcd.last >= this.tcd.current ) {
             this.tcd.last = 0;
-            this.direction = Math.random() * 360;
-            this.tcd.current = Math.random() * (this.tcd.max - this.tcd.min) + this.tcd.min;
+            // this.direction = Math.random() * 360;
+            // this.tcd.current = Math.random() * (this.tcd.max - this.tcd.min) + this.tcd.min;
         }
     }
 
