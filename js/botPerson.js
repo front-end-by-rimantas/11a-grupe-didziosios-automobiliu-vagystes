@@ -3,17 +3,10 @@ import Person from './person.js';
 class BotPerson extends Person {
     constructor( DOM, index, hair, clothes ) {
         super( DOM, index, hair, clothes );
-        // this.speed = 20;
-        this.speed = 0;
-        this.direction = Math.random() * 360;
+        this.speed = 100;
+        // this.speed = 0;
         this.directionCorrection = 90;
-        // timeChangeDirection
-        this.tcd = {
-            min: 3,
-            max: 10,
-            current: 5,
-            last: 0
-        }
+        this.direction = Math.floor(Math.random() * 4) * 90 - this.directionCorrection;
         this.keyboard = {
             up: false,
             right: false,
@@ -22,18 +15,12 @@ class BotPerson extends Person {
         }
     }
 
-    changeDirection ( dt ) {
-        this.tcd.last += dt;
-        if ( this.tcd.last >= this.tcd.current ) {
-            this.tcd.last = 0;
-            // this.direction = Math.random() * 360;
-            // this.tcd.current = Math.random() * (this.tcd.max - this.tcd.min) + this.tcd.min;
-        }
+    changeDirection () {
+        this.direction += Math.floor(Math.random() * 2) * 180 - this.directionCorrection;
+        this.DOM.style.transform = `translate(-50%, -50%) rotate(${this.direction}deg);`;
     }
 
     move = ( dt ) => {
-        this.changeDirection( dt );
-
         const { x, y } = this.nextPosition( dt );
         this.x = x;
         this.y = y;

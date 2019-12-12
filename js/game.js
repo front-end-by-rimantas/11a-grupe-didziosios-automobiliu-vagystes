@@ -86,8 +86,12 @@ class DavGame {
 
         for ( let i=0; i<this.botPersons.length; i++ ) {
             const bot = this.botPersons[i];
-            bot.rotate();
-            bot.move( dt );
+            if ( this.isBotAllowedPosition( bot.nextPosition( dt ) ) ) {
+                bot.move( dt );
+            } else {
+                bot.changeDirection();
+                bot.rotate();
+            }
         }
         // priklausomai nuo posukiu, pasukame masina
         // tikriname, ar:
@@ -122,10 +126,33 @@ class DavGame {
             ys: ySection
         }
         document.querySelector('pre.popup').textContent = JSON.stringify(p, null, 4)
-        
 
         const tileType = this.MAP[ySection][xSection][yTile - ySection * this.sectionTileCount][xTile - xSection * this.sectionTileCount]; 
         if ( tileType === 1 || tileType === 2 ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    isBotAllowedPosition ( position ) {
+        const x = position.x
+        const y = position.y;
+        const xTile = Math.floor(x / this.tileSize);
+        const yTile = Math.floor(y / this.tileSize);
+        const xSection = Math.floor(xTile / this.sectionTileCount)
+        const ySection = Math.floor(yTile / this.sectionTileCount)
+        const p = {
+            x,
+            y,
+            xt: xTile - xSection * this.sectionTileCount,
+            yt: yTile - ySection * this.sectionTileCount,
+            xs: xSection,
+            ys: ySection
+        }
+        
+        const tileType = this.MAP[ySection][xSection][yTile - ySection * this.sectionTileCount][xTile - xSection * this.sectionTileCount];
+        if ( tileType === 1 ) {
             return true;
         }
 
