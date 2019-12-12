@@ -21,7 +21,8 @@ class Person {
             right: false,
             down: false,
             left: false
-        }
+        },
+        this.collisionDistance = Math.random() * 30;
 
         this.render( DOM );
     }
@@ -83,8 +84,8 @@ class Person {
 
         // trigonometrija judejimo pozicijai skaiciuoti
         const radians = (this.direction + this.directionCorrection) * Math.PI / 180;
-        nextX += this.x + this.speed * Math.cos( radians ) * dt;
-        nextY += this.y + this.speed * Math.sin( radians ) * dt;
+        nextX += this.x + this.speed * Math.cos( radians ) * dt - this.collisionDistance * Math.cos( radians ) * dt;
+        nextY += this.y + this.speed * Math.sin( radians ) * dt - this.collisionDistance * Math.sin( radians ) * dt;
 
         return { x: nextX, y: nextY };
     }

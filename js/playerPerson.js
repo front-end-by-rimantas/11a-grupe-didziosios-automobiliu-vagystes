@@ -4,6 +4,7 @@ class PlayerPerson extends Person {
     constructor ( DOM, index, x, y, hair, clothes ) {
         super( DOM, index, x, y, hair, clothes );
         this.directionCorrection = -90;
+        this.collisionDistance = 0;
 
         this.initEventListeners();
     }

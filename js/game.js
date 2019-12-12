@@ -45,7 +45,7 @@ class DavGame {
         const personX = -parseFloat(DOMstyle.width) / 2;
         const personY = -parseFloat(DOMstyle.height) / 2;
         this.player = new PlayerPerson( this.DOM, 1, personX, personY, 'black', 'blue' );
-        this.generateBotPersons(200);
+        this.generateBotPersons(1000);
 
         // uzkurti zaidimo varykli
         this.GAME = window.requestAnimationFrame(() => {
@@ -57,14 +57,25 @@ class DavGame {
         const DOMstyle = getComputedStyle(this.DOMmap);
 
         while ( this.botPersons.length < count ) {
-            const personX = Math.random() * parseFloat(DOMstyle.width);
-            const personY = Math.random() * parseFloat(DOMstyle.height);
-            let xTile = Math.floor(personX / this.tileSize);
+            const personX = Math.floor(Math.random() * parseInt(DOMstyle.width));
+            const personY = Math.floor(Math.random() * parseInt(DOMstyle.height));
+            let xTile = Math.floor(personX / this.tileSize);        // 0 - 29       || 18
             let yTile = Math.floor(personY / this.tileSize);
-            const xSector = Math.floor(xTile / this.sectionTileCount);
+            const xSector = Math.floor(xTile / this.sectionTileCount);  // 0 - 2    || 1
             const ySector = Math.floor(yTile / this.sectionTileCount);
-            xTile -= xSector * this.sectionTileCount;
+            xTile -= xSector * this.sectionTileCount;               // 0 - 9    || 7
             yTile -= ySector * this.sectionTileCount;
+            // if ( xSector > 2 || xSector < 0 ||
+            //      ySector > 2 || ySector < 0 ) {
+            //     console.log(personX, personY, xTile, yTile, xSector, ySector);
+            // }
+            
+            // console.log('-');
+            // console.log(ySector, xSector, yTile, xTile);
+            // console.log(this.MAP[ySector]);
+            // console.log(this.MAP[ySector][xSector]);
+            // console.log(this.MAP[ySector][xSector][yTile]);
+            
             // tikriname ar apskaiciuotose random coord yra saligatvis
             if ( this.MAP[ySector][xSector][yTile][xTile] === 1 ) {
                 this.botPersons.push( new BotPerson( this.DOM, this.botPersons.length + 2, personX, personY ) );
@@ -138,10 +149,12 @@ class DavGame {
     isBotAllowedPosition ( position ) {
         const x = position.x
         const y = position.y;
-        const xTile = Math.floor(x / this.tileSize);
-        const yTile = Math.floor(y / this.tileSize);
-        const xSection = Math.floor(xTile / this.sectionTileCount)
-        const ySection = Math.floor(yTile / this.sectionTileCount)
+        let xTile = Math.floor(x / this.tileSize);
+        let yTile = Math.floor(y / this.tileSize);
+        const xSection = Math.floor(xTile / this.sectionTileCount);
+        const ySection = Math.floor(yTile / this.sectionTileCount);
+        xTile -= xSection * this.sectionTileCount;
+        yTile -= ySection * this.sectionTileCount;
         const p = {
             x,
             y,
@@ -151,7 +164,14 @@ class DavGame {
             ys: ySection
         }
         
-        const tileType = this.MAP[ySection][xSection][yTile - ySection * this.sectionTileCount][xTile - xSection * this.sectionTileCount];
+        if ( ySection < 0 || ySection > 2 ||
+             xSection < 0 || xSection > 2 ||
+             yTile < 0 || yTile > this.sectionTileCount - 1 ||
+             xTile < 0 || xTile > this.sectionTileCount - 1 ) return false;
+        
+        // console.log(x, y, ySection, xSection, yTile, xTile);
+        
+        const tileType = this.MAP[ySection][xSection][yTile][xTile];
         if ( tileType === 1 ) {
             return true;
         }
